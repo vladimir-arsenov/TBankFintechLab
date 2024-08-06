@@ -16,10 +16,6 @@ class TranslationRepositoryImplTest {
 
     private TranslationRepositoryImpl translationRepository;
 
-    private String url = "jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1";
-    private String user = "sa";
-    private String password = "";
-
     @BeforeEach
     @SneakyThrows
     void setUp() {
@@ -27,15 +23,15 @@ class TranslationRepositoryImplTest {
 
         Field url = TranslationRepositoryImpl.class.getDeclaredField("url");
         url.setAccessible(true);
-        url.set(translationRepository, this.url);
+        url.set(translationRepository, "jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1");
 
         Field user = TranslationRepositoryImpl.class.getDeclaredField("user");
         user.setAccessible(true);
-        user.set(translationRepository, this.user);
+        user.set(translationRepository, "sa");
 
         Field password = TranslationRepositoryImpl.class.getDeclaredField("password");
         password.setAccessible(true);
-        password.set(translationRepository, this.password);
+        password.set(translationRepository, "");
 
         // Initialize in-memory database
         translationRepository.init();

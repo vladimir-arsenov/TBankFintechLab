@@ -47,9 +47,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
         log.error("Validation error: {}", ex.getMessage());
         StringBuilder errors = new StringBuilder();
-        ex.getBindingResult().getAllErrors().forEach((error) -> {
-            errors.append(error.getDefaultMessage()).append(". ");
-        });
+        ex.getBindingResult().getAllErrors().forEach((error) -> errors.append(error.getDefaultMessage()).append(". "));
         return new ResponseEntity<>("Ошибка доступа к ресурсу перевода:\n" + errors, HttpStatus.BAD_REQUEST);
     }
 
