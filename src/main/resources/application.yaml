@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: TinkoffFintech2024LabDemo
+
+com:
+  example:
+    translate:
+      folderId: "b1gosfon4nhn8106qrqv"
+      oAuthToken: "y0_AgAAAABlSKoPAATuwQAAAAEMc2vbAABzdDBHZMVKy6rCJ-Ukl_MFFnVXsA"
+    database:
+      url: jdbc:h2:./translations
+      user: sa
+      password: password
+
