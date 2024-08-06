@@ -1,18 +1,15 @@
 package com.example.tinkofffintech2024labdemo.controller;
 
 import com.example.tinkofffintech2024labdemo.dto.TranslationRequest;
-import com.example.tinkofffintech2024labdemo.exception.TranslationResourceAccessException;
-import com.example.tinkofffintech2024labdemo.exception.UnsupportedLanguageException;
 import com.example.tinkofffintech2024labdemo.service.TranslationService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * Контроллер для обработки запросов на перевод текста.
@@ -34,10 +31,8 @@ public class TranslationController {
     @PostMapping
     public ResponseEntity<String> translate(@Valid @RequestBody TranslationRequest request, HttpServletRequest httpRequest) {
         String translatedText = translationService.translateText(
-                    request.getText(), request.getSourceLang(),
-                    request.getTargetLang(), httpRequest.getRemoteAddr());
-            return ResponseEntity.ok(translatedText);
+                request.getText(), request.getSourceLang(),
+                request.getTargetLang(), httpRequest.getRemoteAddr());
+        return ResponseEntity.ok(translatedText);
     }
-
-
 }

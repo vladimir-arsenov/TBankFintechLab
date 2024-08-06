@@ -14,5 +14,11 @@ public interface TranslationRepository {
      * @param translation запись перевода для сохранения
      */
     void save(Translation translation);
+
+    /**
+     * Возвращает все записи переводов из базы данных.
+     *
+     * @return список записей переводов
+     */
     List<Translation> getAll();
 }

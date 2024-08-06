@@ -62,16 +62,15 @@ public class TranslationServiceImpl implements TranslationService {
 
         String[] words = text.trim().split("\\s+");
         ExecutorService executor = Executors.newFixedThreadPool(Math.min(words.length, 10));
-        List<Callable<String>> tasks = new ArrayList<>();
-
-        for (String word : words) {
-            tasks.add(() -> translateWord(word, sourceLang, targetLang));
-            TimeUnit.MILLISECONDS.sleep(100); // необходимо из-за ограничений API: 20 запросов в 1 секунду
-        }
 
         StringBuilder translatedText = new StringBuilder();
-        List<Future<String>> futures = executor.invokeAll(tasks);
-        for (Future<String> future : futures) {
+        List<Future<String>> futures = new ArrayList<>();
+        for (String word : words) {
+            Future<String> future = executor.submit(() -> translateWord(word, sourceLang, targetLang));
+            futures.add(future);
+            TimeUnit.MILLISECONDS.sleep(80); // необходимо из-за ограничений API по количеству запросов в секунду
+        }
+        for(Future<String> future : futures) {
             translatedText.append(future.get()).append(" ");
         }
         executor.shutdown();
@@ -107,15 +106,14 @@ public class TranslationServiceImpl implements TranslationService {
             ResponseEntity<YandexTranslateResponse> response = restTemplate.exchange(url, HttpMethod.POST, entity, YandexTranslateResponse.class);
             return Objects.requireNonNull(response.getBody()).getTranslations().get(0).getText();
         } catch (HttpClientErrorException e) {
-            System.out.println(e);
             if (e.getStatusCode() == HttpStatus.BAD_REQUEST) {
                 if (e.getResponseBodyAsString().contains("unsupported source_language_code")) {
                     throw new UnsupportedLanguageException("Unsupported source language code");
-                } else {
-                    throw new TranslationResourceAccessException("Error accessing resource");
+                } else if (e.getResponseBodyAsString().contains("unsupported target_language_code")){
+                    throw new UnsupportedLanguageException("Unsupported target language code");
                 }
             }
-            throw e;
+            throw new TranslationResourceAccessException(e.getMessage());
         }
     }
 
@@ -146,15 +144,4 @@ public class TranslationServiceImpl implements TranslationService {
 
         log.info("IAM-token acquired");
     }
-
 }
-
-// TODO
-//  unspoorted targetLangurage
-
-
-// TODO
-//  1) add update token if 401
-//  4) proper encoding
-//  7) remove all souts and clean up code
-//  8) fix thing about exceptions

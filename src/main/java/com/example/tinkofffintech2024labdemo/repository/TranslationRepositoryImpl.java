@@ -90,6 +90,9 @@ public class TranslationRepositoryImpl implements TranslationRepository {
         return translations;
     }
 
+    /**
+     * Удаляет таблицу с записями переводов из базы данных.
+     */
     @SneakyThrows
     public void clear() {
         String sql = "DROP TABLE IF EXISTS translations";

@@ -2,6 +2,7 @@ package com.example.tinkofffintech2024labdemo.repository;
 
 import com.example.tinkofffintech2024labdemo.model.Translation;
 import lombok.SneakyThrows;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -38,6 +39,11 @@ class TranslationRepositoryImplTest {
 
         // Initialize in-memory database
         translationRepository.init();
+    }
+
+    @AfterAll
+    static void afterAll() {
+
     }
 
     @AfterEach

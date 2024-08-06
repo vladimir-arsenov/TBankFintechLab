@@ -19,7 +19,6 @@ public class YandexTranslateResponse {
     @JsonProperty("translations")
     private List<YTranslation> translations;
 
-
     @Setter
     @Getter
     @JsonIgnoreProperties(ignoreUnknown = true)
