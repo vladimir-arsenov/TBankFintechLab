@@ -1,27 +1,18 @@
 package com.example.tinkofffintech2024labdemo.controller;
 
-import com.example.tinkofffintech2024labdemo.dto.TranslationRequest;
 import com.example.tinkofffintech2024labdemo.exception.GlobalExceptionHandler;
 import com.example.tinkofffintech2024labdemo.exception.TranslationResourceAccessException;
 import com.example.tinkofffintech2024labdemo.exception.UnsupportedLanguageException;
-import com.example.tinkofffintech2024labdemo.service.TranslationService;
 import com.example.tinkofffintech2024labdemo.service.TranslationServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.filter.CharacterEncodingFilter;
-
-import java.nio.charset.StandardCharsets;
-
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -34,15 +25,12 @@ public class TranslationControllerAdviceTest {
 
     private MockMvc mockMvc;
 
-
     @MockBean
     private TranslationServiceImpl translationService;
 
-    private TranslationController translationController;
-
     @BeforeEach
     void setUp() {
-        translationController = new TranslationController(translationService);
+        TranslationController translationController = new TranslationController(translationService);
         mockMvc = MockMvcBuilders.standaloneSetup(translationController)
                 .setControllerAdvice(new GlobalExceptionHandler())
                 .build();
@@ -50,7 +38,6 @@ public class TranslationControllerAdviceTest {
 
     @Test
     void testUnsupportedLanguageException() throws Exception {
-        TranslationRequest request = new TranslationRequest("Hello", "invalid", "ru");
         when(translationService.translateText(anyString(), anyString(), anyString(), anyString())).thenThrow(new UnsupportedLanguageException("Unsupported source language code"));
 
         mockMvc.perform(post("/translate")
@@ -63,7 +50,6 @@ public class TranslationControllerAdviceTest {
 
     @Test
     void testTranslationResourceAccessException() throws Exception {
-        TranslationRequest request = new TranslationRequest("Hello", "en", "ru");
         when(translationService.translateText(anyString(), anyString(), anyString(), anyString())).thenThrow(new TranslationResourceAccessException("Error accessing resource"));
 
         mockMvc.perform(post("/translate")
